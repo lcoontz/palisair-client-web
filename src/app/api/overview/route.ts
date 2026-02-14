@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category") || null;
   const status = searchParams.get("status") || null;
 
-  // Use RPC function to aggregate all items (no 1000 row limit)
-  const { data: roomStats, error } = await supabase.rpc("get_overview_stats", {
+  // Use client-specific RPC that only counts 'final' and 'client review' items
+  const { data: roomStats, error } = await supabase.rpc("get_client_overview_stats", {
     p_category: category,
     p_status: status,
   });
