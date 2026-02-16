@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Deployment Note
+
+- `main` branch pushes trigger deployment on Vercel.
+- This applies to both Palisair apps:
+  - `palisair-auditor-web`
+  - `palisair-client-web`
+
 ## Getting Started
 
 First, run the development server:
