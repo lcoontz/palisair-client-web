@@ -47,6 +47,7 @@ export function Sidebar() {
   const navItems = [
     { label: "Overview", href: "/overview" },
     { label: "All Items", href: "/all-items" },
+    { label: "Photo Audit", href: "/photo-audit/palisair" },
   ];
 
   return (
