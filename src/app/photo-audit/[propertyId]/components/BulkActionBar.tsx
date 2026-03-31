@@ -2,17 +2,19 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { PhotoAuditRoom } from "@/lib/photo-audit/types";
+import type { PhotoAudit, PhotoAuditRoom } from "@/lib/photo-audit/types";
 
 export function BulkActionBar({
   selectedCount,
   selectedIds,
+  selectedPhotos,
   rooms,
   token,
   onClear,
 }: {
   selectedCount: number;
   selectedIds: Set<string>;
+  selectedPhotos: PhotoAudit[];
   rooms: PhotoAuditRoom[];
   token: string;
   onClear: () => void;
@@ -104,21 +106,26 @@ export function BulkActionBar({
         Link
       </button>
 
-      <button
-        onClick={() => bulkMutation.mutate({ action: "set_overview" })}
-        disabled={bulkMutation.isPending}
-        className="px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors disabled:opacity-50"
-      >
-        Set Overview
-      </button>
-
-      <button
-        onClick={() => bulkMutation.mutate({ action: "remove_overview" })}
-        disabled={bulkMutation.isPending}
-        className="px-3 py-1 text-sm bg-slate-600 hover:bg-slate-500 rounded-lg transition-colors disabled:opacity-50"
-      >
-        Remove Overview
-      </button>
+      {(() => {
+        const allOverview = selectedPhotos.length > 0 && selectedPhotos.every(p => p.is_overview);
+        const noneOverview = selectedPhotos.length > 0 && selectedPhotos.every(p => !p.is_overview);
+        // Mixed selection: default to "Set Overview" since that's the additive action
+        const action = allOverview ? "remove_overview" : "set_overview";
+        const label = allOverview ? "Remove Overview" : "Set Overview";
+        return (
+          <button
+            onClick={() => bulkMutation.mutate({ action })}
+            disabled={bulkMutation.isPending}
+            className={`px-3 py-1 text-sm rounded-lg transition-colors disabled:opacity-50 ${
+              allOverview
+                ? "bg-slate-600 hover:bg-slate-500"
+                : "bg-indigo-600 hover:bg-indigo-500"
+            }`}
+          >
+            {label}
+          </button>
+        );
+      })()}
 
       <div className="relative">
         <button

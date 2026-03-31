@@ -229,6 +229,7 @@ export function PhotoAuditShell({
           <BulkActionBar
             selectedCount={selectedPhotoIds.size}
             selectedIds={selectedPhotoIds}
+            selectedPhotos={photos.filter(p => selectedPhotoIds.has(p.id))}
             rooms={rooms}
             token={token}
             onClear={clearSelection}
