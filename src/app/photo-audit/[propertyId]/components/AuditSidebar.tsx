@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PhotoAuditRoom } from "@/lib/photo-audit/types";
@@ -17,6 +18,7 @@ export function AuditSidebar({
   isLoading: boolean;
   token: string;
 }) {
+  const [confirmingRoom, setConfirmingRoom] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const approveAllMutation = useMutation({
@@ -42,6 +44,7 @@ export function AuditSidebar({
       );
     },
     onSuccess: () => {
+      setConfirmingRoom(null);
       queryClient.invalidateQueries({ queryKey: ["photo-audit-rooms"] });
       queryClient.invalidateQueries({ queryKey: ["photo-audit-photos"] });
     },
@@ -149,17 +152,34 @@ export function AuditSidebar({
                 {/* Approve all button for selected room */}
                 {isSelected && !isComplete && room.total_photos > 0 && (
                   <div className="px-4 py-1.5">
-                    <button
-                      onClick={() =>
-                        approveAllMutation.mutate(room.room_folder)
-                      }
-                      disabled={approveAllMutation.isPending}
-                      className="w-full text-xs py-1 px-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded hover:bg-emerald-100 transition-colors disabled:opacity-50"
-                    >
-                      {approveAllMutation.isPending
-                        ? "Approving..."
-                        : `Approve all remaining (${room.total_photos - room.reviewed_count})`}
-                    </button>
+                    {confirmingRoom === room.room_folder ? (
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() =>
+                            approveAllMutation.mutate(room.room_folder)
+                          }
+                          disabled={approveAllMutation.isPending}
+                          className="flex-1 text-xs py-1 px-2 text-white bg-emerald-600 border border-emerald-600 rounded hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                        >
+                          {approveAllMutation.isPending
+                            ? "Approving..."
+                            : `Yes, approve ${room.total_photos - room.reviewed_count}`}
+                        </button>
+                        <button
+                          onClick={() => setConfirmingRoom(null)}
+                          className="text-xs py-1 px-2 text-slate-600 bg-white border border-slate-200 rounded hover:bg-slate-50 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmingRoom(room.room_folder)}
+                        className="w-full text-xs py-1 px-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded hover:bg-emerald-100 transition-colors"
+                      >
+                        Approve all remaining ({room.total_photos - room.reviewed_count})
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
