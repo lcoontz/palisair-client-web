@@ -80,7 +80,7 @@ export function BulkActionBar({
               { value: "low_quality", label: "Low quality" },
               { value: "duplicate_photo", label: "Duplicate photo" },
               { value: "missing_detail", label: "Missing photo detail" },
-              { value: "missing_detections", label: "Missing detections" },
+              { value: "detection_issues", label: "Detection issues" },
             ].map((opt) => (
               <button
                 key={opt.value}
@@ -109,8 +109,6 @@ export function BulkActionBar({
 
       {(() => {
         const allOverview = selectedPhotos.length > 0 && selectedPhotos.every(p => p.is_overview);
-        const noneOverview = selectedPhotos.length > 0 && selectedPhotos.every(p => !p.is_overview);
-        // Mixed selection: default to "Set Overview" since that's the additive action
         const action = allOverview ? "remove_overview" : "set_overview";
         const label = allOverview ? "Remove Overview" : "Set Overview";
         return (

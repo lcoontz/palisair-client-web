@@ -87,14 +87,18 @@ export function PhotoThumbnail({
             className={`w-2.5 h-2.5 rounded-full ${STATUS_DOT[photo.status]}`}
           />
           {photo.status === "flagged" && photo.flag_reason && density !== "small" && (
-            <span className="text-[9px] bg-red-500/80 text-white px-1 py-0.5 rounded backdrop-blur-sm">
+            <span className={`text-[9px] text-white px-1 py-0.5 rounded backdrop-blur-sm ${
+              photo.flag_reason === "detection_issues"
+                ? "bg-orange-500/80"
+                : "bg-red-500/80"
+            }`}>
               {photo.flag_reason === "low_quality"
                 ? "LQ"
                 : photo.flag_reason === "duplicate_photo"
                   ? "Dup"
                   : photo.flag_reason === "missing_detail"
                     ? "Miss"
-                    : photo.flag_reason === "missing_detections"
+                    : photo.flag_reason === "detection_issues"
                       ? "Det"
                       : ""}
             </span>
