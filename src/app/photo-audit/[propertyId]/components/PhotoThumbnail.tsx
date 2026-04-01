@@ -94,7 +94,9 @@ export function PhotoThumbnail({
                   ? "Dup"
                   : photo.flag_reason === "missing_detail"
                     ? "Miss"
-                    : ""}
+                    : photo.flag_reason === "missing_detections"
+                      ? "Det"
+                      : ""}
             </span>
           )}
         </div>
